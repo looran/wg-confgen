@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Wireguard VPN configuration management script
-# 2019, Laurent Ghigonis
+# 2019, Laurent Ghigonis <ooookiwi@gmail.com>
 
 set -e
 
@@ -9,7 +9,7 @@ usageexit() {
     cat <<-_EOF
 usage: $PROG (srvinit | peeradd | srvconf | srvdeploy) <arguments...>
 srvinit <ipaddress>
-    create server base connfiguration (local file)
+    create server base configuration (local file)
 peeradd <peername> <ipaddress> [user_email]
     create a configuration file for a peer (local file)
 srvconf
@@ -93,7 +93,7 @@ ListenPort = $(echo $VPNSERVER_ENDPOINT |cut -d':' -f2)
 PrivateKey = $(cat $privatekey)
 Address = $(echo $ipaddress)/$SUBNET
 PostUp = sysctl -w net.ipv4.conf.%i.forwarding=1
-${VPNCLIENT_EXTRACONF}
+${VPNSERVER_EXTRACONF}
 
 _EOF
     echo "[*] DONE generated Wireguard base configuration to $baseconf"

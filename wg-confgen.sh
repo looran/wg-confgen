@@ -135,7 +135,7 @@ Address = $ipaddress/$SUBNET
 ${VPNCLIENT_EXTRACONF}
 [Peer]
 PublicKey = $(cat "$VPNSERVER_PUBLICKEY")
-AllowedIPs = ${VPNSERVER_ALLOWEDIPS}
+AllowedIPs = ${VPNCLIENT_ALLOWEDIPS}
 EndPoint = ${VPNSERVER_ENDPOINT}
 PresharedKey = $(cat $pskkey)
 _EOF

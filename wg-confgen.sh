@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Wireguard VPN configuration management script
-# 2019, Laurent Ghigonis <ooookiwi@gmail.com>
+# 2019, 2020, Laurent Ghigonis <ooookiwi@gmail.com>
+# https://github.com/looran/wg-confgen
 
 set -e
 
@@ -15,32 +16,9 @@ peeradd <peername> <ipaddress> [user_email]
 srvconf
     generate server configuration with all peers (local file)
 srvdeploy
-	(optional) deploy server configuration and restart wg
-
-You need to have and fill the following file in your current directory:
-./wg-confgen.conf
-
-srvinit will create a base wireguard server configuration stored in the following local files:
-./server
-./server/publickey
-./server/privatekey
-./server/vpn-name.base.conf
-
-peeradd will create the following local configuration files for a new peer:
-./peer_peer-name
-./peer_peer-name/serveraddition.conf
-./peer_peer-name/vpn-name.conf
-./peer_peer-name/vpn-name.conf.asc    # GPG encrypted, only created if user_email argument was present
-./peer_peer-name/publickey
-./peer_peer-name/psk
-./peer_peer-name/privatekey
-
-srvconf will generate the wg server configuration in this local file:
-./server/vpn-name.conf
-
-srvdeploy (optional) will:
-* scp ./server/vpn-name.conf to wg server host in /etc/wireguard/vpn-name.conf
-* restart wg interface on wg server host using wg-quick
+    (active action) deploy server configuration and restart wg
+help
+    shows extended help
 _EOF
 	exit 1
 }
@@ -92,7 +70,6 @@ srvinit)
 ListenPort = $(echo $VPNSERVER_ENDPOINT |cut -d':' -f2)
 PrivateKey = $(cat $privatekey)
 Address = $(echo $ipaddress)/$SUBNET
-PostUp = sysctl -w net.ipv4.conf.%i.forwarding=1
 ${VPNSERVER_EXTRACONF}
 
 _EOF
@@ -138,6 +115,7 @@ PublicKey = $(cat "$VPNSERVER_PUBLICKEY")
 AllowedIPs = ${VPNCLIENT_ALLOWEDIPS}
 EndPoint = ${VPNSERVER_ENDPOINT}
 PresharedKey = $(cat $pskkey)
+PersistentKeepalive = ${VPNCLIENT_PERSISTENTKEEPALIVE}
 _EOF
 
     echo "[+] creating configuration file addition for server"
@@ -224,7 +202,7 @@ srvconf)
 # DO NOT MODIFY THIS FILE
 
 _EOF
-	[ ! -e peer_*/serveraddition.conf ] && err "no peers found, use '$PROG peeradd' first"
+	[ -z "$(ls peer_*/serveraddition.conf 2>/dev/null)" ] && err "no peers found, use '$PROG peeradd' first"
 	cat $serverdir/$VPNNAME.base.conf peer_*/serveraddition.conf >> $conf
 	cat $conf
 	echo "[*] DONE, generated server configuration in $conf"
@@ -240,6 +218,47 @@ srvdeploy)
 	trace scp $conf $VPNSERVER_SSH_HOST:/etc/wireguard/
 	trace ssh $VPNSERVER_SSH_HOST "wg-quick down $VPNNAME; wg-quick up $VPNNAME"
 	echo "[*] DONE deployed configuration to $VPNSERVER_SSH_HOST and restarted $VPNNAME wg interface"
+	;;
+
+help)
+	cat <<-_EOF
+Extended help:
+
+To use wg-confgen, you need to fill the following file in your current directory:
+./wg-confgen.conf
+Then you will use this script to generate wireguard configuration for server and clients.
+
+'wg-confgen srvinit' will create a base wireguard server configuration stored in the following local files:
+./server
+./server/publickey
+./server/privatekey
+./server/vpn-name.base.conf
+
+'wg-confgen peeradd' will create the following local configuration files for a new peer:
+./peer_peer-name
+./peer_peer-name/serveraddition.conf
+./peer_peer-name/vpn-name.conf
+./peer_peer-name/vpn-name.conf.asc    # GPG encrypted, only created if user_email argument was present
+./peer_peer-name/publickey
+./peer_peer-name/psk
+./peer_peer-name/privatekey
+
+'wg-confgen srvconf' will generate the wg server configuration in this local file:
+./server/vpn-name.conf
+
+'wg-confgen srvdeploy' (optional) will:
+* scp ./server/vpn-name.conf to wg server host in /etc/wireguard/vpn-name.conf
+* restart wg interface on wg server host using wg-quick
+
+For example:
+$ wg-confgen srvinit 172.16.99.1
+$ wg-confgen peeradd user1 172.16.99.2
+$ wg-confgen peeradd user2 172.16.99.3 user2@mail.com
+$ wg-confgen peeradd laptop1 172.16.99.4
+$ wg-confgen srvconf
+$ wg-confgen srvdeploy 
+wireguard is up and running on the server !
+_EOF
 	;;
 
 *)

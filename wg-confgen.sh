@@ -8,7 +8,7 @@ set -e
 
 usageexit() {
     cat <<-_EOF
-usage: $PROG (srvinit | peeradd | srvconf | srvdeploy) <arguments...>
+usage: $PROG (defaultconf | srvinit | peeradd | srvconf | srvdeploy) <arguments...>
 defaultconf
     create a default wg-confgen.conf file
 srvinit <ipaddress>

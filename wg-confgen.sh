@@ -8,9 +8,11 @@ set -e
 
 usageexit() {
     cat <<-_EOF
-usage: $PROG (defaultconf | srvinit | peeradd | srvconf | srvdeploy) <arguments...>
+usage: $PROG (defaultconf | network | srvinit | peeradd | srvconf | srvdeploy) <arguments...>
 defaultconf
     create a default wg-confgen.conf file
+network
+    display summary of server and peers IP addressing
 srvinit <ipaddress>
     initialize server keys (local files)
 peeradd <peername> <ipaddress> [user_email]
@@ -106,6 +108,20 @@ the admin"
 # VPNCLIENT_PERSISTENTKEEPALIVE="25"
 _EOF
     echo "[*] DONE created $path"
+	;;
+
+network)
+	conf_load
+echo "server:"
+echo "   $(cat $SERVER_IP_FILE)"
+for p in peer_*; do
+	echo "   $p: $(grep AllowedIPs $p/serveraddition.conf)"
+done
+for p in peer_*; do
+	echo "$p"
+	echo "   $(grep Address $p/$VPNIFACE.conf)"
+	echo "   $(grep AllowedIPs $p/$VPNIFACE.conf)"
+done
 	;;
 
 srvinit)

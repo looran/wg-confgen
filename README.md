@@ -59,8 +59,6 @@ VPNCLIENT_ALLOWEDIPS="172.16.99.0/24"
 VPNCLIENT_EXTRACONF="Table = off"
 # included wg client server peer configuration
 VPNCLIENT_PERSISTENTKEEPALIVE="0"
-# subnet for IPs passed in srvinit / peeradd
-SUBNET="24"
 # email template body content, generated for new clients
 EMAIL_BODY=""
 # email template signature, generated for new clients
@@ -119,9 +117,9 @@ Then use wg-confgen to generate wireguard configuration for server and clients, 
 For example:
 $ wg-confgen defaultconf
 # go and edit wg-confgen.conf
-$ wg-confgen srvinit 172.16.99.1
-$ wg-confgen peeradd user1 172.16.99.2
-$ wg-confgen peeradd user2 172.16.99.3 user2@mail.com
+$ wg-confgen srvinit 172.16.99.1/24
+$ wg-confgen peeradd user1 172.16.99.2/24
+$ wg-confgen peeradd user2 172.16.99.3/24 user2@mail.com
 $ wg-confgen srvconf
 $ wg-confgen srvdeploy 
 wireguard is up and running on the server !

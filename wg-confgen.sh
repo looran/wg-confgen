@@ -84,8 +84,6 @@ VPNCLIENT_ALLOWEDIPS="172.16.99.0/24"
 VPNCLIENT_EXTRACONF="Table = off"
 # included wg client server peer configuration
 VPNCLIENT_PERSISTENTKEEPALIVE="0"
-# subnet for IPs passed in srvinit / peeradd
-SUBNET="24"
 # email template body content, generated for new clients
 EMAIL_BODY=""
 # email template signature, generated for new clients
@@ -156,7 +154,7 @@ _EOF
 # $VPNNAME wireguard configuration for peer $peername, created on $NOW
 [Interface]
 PrivateKey = $(cat "$privatekey")
-Address = $ipaddress/$SUBNET
+Address = $ipaddress
 ${VPNCLIENT_EXTRACONF}
 [Peer]
 PublicKey = $(cat "$SERVER_PUBKEY_FILE")
@@ -171,7 +169,7 @@ _EOF
 # peer $peername, added on $NOW
 [Peer]
 PublicKey = $(cat "$publickey")
-AllowedIPs = $ipaddress/32
+AllowedIPs = $ipaddress
 PresharedKey = $(cat $pskkey)
 
 _EOF
@@ -255,7 +253,7 @@ srvconf)
 [Interface]
 ListenPort = $(echo $VPNSERVER_ENDPOINT |cut -d':' -f2)
 PrivateKey = $(cat $SERVER_PRIVKEY_FILE)
-Address = $(cat $SERVER_IP_FILE)/$SUBNET
+Address = $(cat $SERVER_IP_FILE)
 ${VPNSERVER_EXTRACONF}
 
 _EOF
@@ -313,9 +311,9 @@ Then use wg-confgen to generate wireguard configuration for server and clients, 
 For example:
 $ wg-confgen defaultconf
 # go and edit wg-confgen.conf
-$ wg-confgen srvinit 172.16.99.1
-$ wg-confgen peeradd user1 172.16.99.2
-$ wg-confgen peeradd user2 172.16.99.3 user2@mail.com
+$ wg-confgen srvinit 172.16.99.1/24
+$ wg-confgen peeradd user1 172.16.99.2/24
+$ wg-confgen peeradd user2 172.16.99.3/24 user2@mail.com
 $ wg-confgen srvconf
 $ wg-confgen srvdeploy 
 wireguard is up and running on the server !

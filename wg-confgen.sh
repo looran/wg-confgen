@@ -119,6 +119,7 @@ for p in peer_*; do
 done
 for p in peer_*; do
 	echo "$p"
+	echo "   $(grep PublicKey $p/serveraddition.conf)"
 	echo "   $(grep Address $p/$VPNIFACE.conf)"
 	echo "   $(grep AllowedIPs $p/$VPNIFACE.conf)"
 done

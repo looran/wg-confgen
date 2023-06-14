@@ -203,7 +203,6 @@ $email"
 		gpg -a -e -r "$email" -o $confgpg $conf
 	fi
 
-    echo
     cat > "$instructions" <<-_EOF
 ---INSTRUCTION#1 : Update Wireguard Server configuration ---------------------------
 
@@ -244,10 +243,9 @@ $EMAIL_FOOTER
 
 ---INSTRUCTION#END--------------------------------------------------------------------
 _EOF
-	cat "$instructions"
 
-    echo
-    echo "[*] DONE added peer $peername in $peerdir/, check instructions above"
+    echo "[*] DONE added peer $peername in $peerdir/"
+	echo "[*] check instructions in $instructions"
     ;;
 
 srvconf)

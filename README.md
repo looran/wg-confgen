@@ -15,12 +15,14 @@ Wireguard server/clients settings are created based on [wg-confgen.conf](#wg-con
 
 ```
 $ wg-confgen
-usage: wg-confgen.sh (srvinit | peeradd | srvconf | srvdeploy) <arguments...>
+usage: wg-confgen.sh (defaultconf | network | srvinit | peeradd | srvconf | srvdeploy) <arguments...>
 defaultconf
     create a default wg-confgen.conf file
-srvinit <ipaddress>
+network
+    display summary of server and peers IP addressing
+srvinit <ipaddress>/<subnet>
     initialize server keys (local files)
-peeradd <peername> <ipaddress> [user_email]
+peeradd <peername> "<ipaddress>/<subnet> [<ipaddress/subnet>]" [user_email]
     create a configuration file for a peer (local file)
 srvconf
     generate server configuration with all peers (local file)

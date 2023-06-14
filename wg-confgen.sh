@@ -13,9 +13,9 @@ defaultconf
     create a default wg-confgen.conf file
 network
     display summary of server and peers IP addressing
-srvinit <ipaddress>
+srvinit <ipaddress>/<subnet>
     initialize server keys (local files)
-peeradd <peername> <ipaddress> [user_email]
+peeradd <peername> "<ipaddress>/<subnet> [<ipaddress/subnet>]" [user_email]
     create a configuration file for a peer (local file)
 srvconf
     generate server configuration with all peers (local file)

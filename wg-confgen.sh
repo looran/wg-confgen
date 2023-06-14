@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Wireguard VPN configuration management script
 # 2019-2022, Laurent Ghigonis <ooookiwi@gmail.com>

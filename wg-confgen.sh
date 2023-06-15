@@ -113,16 +113,24 @@ _EOF
 network)
 	conf_load
 	echo "server:"
-	echo "   $(cat $SERVER_IP_FILE)"
-	for p in peer_*; do
-		echo "   $p: $(grep AllowedIPs $p/serveraddition.conf)"
-	done
-	for p in peer_*; do
-		echo "$p"
-		echo "   $(grep PublicKey $p/serveraddition.conf)"
-		echo "   $(grep Address $p/$VPNIFACE.conf)"
-		echo "   $(grep AllowedIPs $p/$VPNIFACE.conf)"
-	done
+	if [ -e $SERVER_IP_FILE ]; then
+		echo "   $(cat $SERVER_IP_FILE)"
+	else
+		echo "   no server, use '$PROG srvinit'"
+	fi
+	if [ -e peer_* ]; then
+		for p in peer_*; do
+			echo "   $p: $(grep AllowedIPs $p/serveraddition.conf)"
+		done
+		for p in peer_*; do
+			echo "$p"
+			echo "   $(grep PublicKey $p/serveraddition.conf)"
+			echo "   $(grep Address $p/$VPNIFACE.conf)"
+			echo "   $(grep AllowedIPs $p/$VPNIFACE.conf)"
+		done
+	else
+		echo "no peers, use '$PROG peeradd'"
+	fi
 	;;
 
 srvinit)

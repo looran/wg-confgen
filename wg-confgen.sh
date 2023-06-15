@@ -77,7 +77,7 @@ VPNIFACE="wgvpn"
 # wg server IP and port
 VPNSERVER_ENDPOINT="A.B.C.D:51820"
 # used only for 'wg-confgen srvdeploy'
-VPNSERVER_SSH_HOST="A.B.C.D"
+VPNSERVER_SSH_HOST="A.B.C.D|ssh-alias"
 # included in wg server configuration
 VPNSERVER_EXTRACONF=""
 # included in each wg client configuration

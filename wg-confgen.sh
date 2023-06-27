@@ -196,7 +196,7 @@ _EOF
 # peer $peername, added on $NOW
 [Peer]
 PublicKey = $(cat "$publickey")
-AllowedIPs = $ipaddress
+AllowedIPs = $(echo $ipaddress |cut -d'/' -f1)/32
 PresharedKey = $(cat $pskkey)
 
 _EOF

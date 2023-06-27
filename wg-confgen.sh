@@ -118,7 +118,7 @@ network)
 	else
 		echo "   no server, use '$PROG srvinit'"
 	fi
-	if [ -e peer_* ]; then
+	if [ $(ls -1 |egrep 'peer.*' |wc -l) -gt 0 ]; then
 		for p in peer_*; do
 			echo "   $p: $(grep AllowedIPs $p/serveraddition.conf)"
 		done

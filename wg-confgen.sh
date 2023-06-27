@@ -123,7 +123,7 @@ network)
 			echo "   $p: $(grep AllowedIPs $p/serveraddition.conf)"
 		done
 		for p in peer_*; do
-			echo "$p"
+			echo "$p:"
 			echo "   $(grep PublicKey $p/serveraddition.conf)"
 			echo "   $(grep Address $p/$VPNIFACE.conf)"
 			echo "   $(grep AllowedIPs $p/$VPNIFACE.conf)"
@@ -164,10 +164,12 @@ peeradd)
     [ -e $peerdir ] && err "peer directory already exists : $peerdir"
     mkdir $peerdir
     cat <<-_EOF
-peer public key    : $publickey
-peer private key   : $privatekey
-psk key            : $pskkey
-configuration file : $conf
+new peer files:
+peer public key            : $publickey
+peer private key           : $privatekey
+psk key                    : $pskkey
+configuration file         : $conf
+server extra configuration : $confsrv
 _EOF
 
     echo "[+] generating keys"
